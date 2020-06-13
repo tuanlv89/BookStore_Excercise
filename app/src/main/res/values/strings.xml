@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Quản lý sách</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="lbl_add_book">Thêm sách</string>
+    <string name="msg_no_books">Không có dữ liệu!</string>
+    <string name="lbl_new_book_title">Tên sách</string>
+    <string name="lbl_edit_book_title">Sửa sách</string>
+    <string name="lbl_new_book_author">Tác giả</string>
+    <string name="lbl_edit_book_author">Chỉnh sửa tác giả</string>
+    <string name="hint_enter_book_title">Nhập tên sách!</string>
+    <string name="hint_enter_book_author">Nhập tên tác giả!</string>
+    <string name="lbl_new_book_category">Loại sách</string>
+    <string name="lbl_edit_book_category">Chỉnh sửa loại sách</string>
+</resources>
