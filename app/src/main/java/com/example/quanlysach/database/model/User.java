@@ -14,10 +14,10 @@ public class User {
 
     // Create table SQL query
     public static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "( "
+            "CREATE TABLE " + TABLE_NAME + " ( "
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_USERNAME + " TEXT, "
-                    + COLUMN_PASSWORD + " TEXT"
+                    + COLUMN_PASSWORD + " TEXT "
                     + ")";
 
     public User() {
@@ -51,5 +51,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

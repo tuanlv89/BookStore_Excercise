@@ -35,13 +35,16 @@ public class Register extends AppCompatActivity {
                     User user = new User();
                     user.setUsername(username);
                     user.setPassword(pass);
-                    if(db.register(user)>=0) {
+                    if(db.getUser(username, pass) != null) {
+                        Toast.makeText(Register.this, "Tài khoản đã được sử dụng! Vui lòng chọn một tài khoản khác", Toast.LENGTH_LONG).show();
+                    } else if(db.register(user)>=0) {
                         Toast.makeText(Register.this, "Đăng ký thành công", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(Register.this, MainActivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent(Register.this, Login.class);
+//                        startActivity(intent);
+                        finish();
                     } else Toast.makeText(Register.this, "Đăng ký không thành công", Toast.LENGTH_LONG).show();
 
-                }
+                } else Toast.makeText(Register.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_LONG).show();
             }
         });
     }

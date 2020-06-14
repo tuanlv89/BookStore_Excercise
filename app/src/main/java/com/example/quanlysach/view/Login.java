@@ -33,6 +33,8 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Login.this, Register.class);
+                edtUsername.setText("");
+                edtPassword.setText("");
                 startActivity(intent);
             }
         });
@@ -46,7 +48,9 @@ public class Login extends AppCompatActivity {
                 User user = db.getUser(username, pass);
                 if(user != null) {
                     Intent intent = new Intent(Login.this, MainActivity.class);
+                    intent.putExtra("idUser", user.getId());
                     startActivity(intent);
+                    finish();
                 } else Toast.makeText(Login.this, "Tên đăng nhập hoặc mật khẩu không đúng", Toast.LENGTH_LONG).show();
             }
         });

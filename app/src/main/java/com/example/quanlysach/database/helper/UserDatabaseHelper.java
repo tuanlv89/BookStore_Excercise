@@ -10,7 +10,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.quanlysach.database.model.Book;
 import com.example.quanlysach.database.model.User;
+import com.example.quanlysach.view.Login;
 
 
 public class UserDatabaseHelper extends SQLiteOpenHelper {
@@ -32,6 +34,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
         // create books table
         db.execSQL(User.CREATE_TABLE);
+        db.execSQL(Book.CREATE_TABLE);
         Log.d("AAA", User.CREATE_TABLE);
     }
 
@@ -66,38 +69,38 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     public User getUser(String username, String pass) {
         // get readable database as we are not inserting anything
         SQLiteDatabase db = this.getReadableDatabase();
-
+        Log.d("AAA", User.COLUMN_USERNAME + " = '"+ username+"' AND " + User.COLUMN_PASSWORD + " = '"+pass+"';");
         Cursor cursor = db.query(User.TABLE_NAME,
                 new String[]{User.COLUMN_ID, User.COLUMN_USERNAME, User.COLUMN_PASSWORD},
-                User.COLUMN_USERNAME + " = "+ username+" AND " + User.COLUMN_PASSWORD + " = "+pass,
+                User.COLUMN_USERNAME + " = '"+ username+"' AND " + User.COLUMN_PASSWORD + " = '"+pass+"';",
                 null, null, null, null, null);
         Log.d("AAA", cursor.toString());
-        if (cursor != null)
-            cursor.moveToFirst();
+        if (cursor != null && cursor.moveToFirst()) {
+            User user = new User(
+                    cursor.getInt(cursor.getColumnIndex(User.COLUMN_ID)),
+                    cursor.getString(cursor.getColumnIndex(User.COLUMN_USERNAME)),
+                    cursor.getString(cursor.getColumnIndex(User.COLUMN_PASSWORD)));
 
-        // prepare book object
-        User user = new User(
-                cursor.getInt(cursor.getColumnIndex(User.COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(User.COLUMN_USERNAME)),
-                cursor.getString(cursor.getColumnIndex(User.COLUMN_PASSWORD)));
-
-        // close the db connection
+            Log.d("AAA", "Loi ne" + user.toString());
+            // close the db connection
+            cursor.close();
+            return user;
+        }
         cursor.close();
-
-        return user;
+        return null;
     }
 
     public List<User> getAllUser() {
         List<User> books = new ArrayList<>();
 
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + User.TABLE_NAME;
+        String selectQuery = "SELECT * FROM " + User.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
+        if (cursor!=null && cursor.moveToFirst()) {
             do {
                 User user = new User();
                 user.setId(cursor.getInt(cursor.getColumnIndex(User.COLUMN_ID)));

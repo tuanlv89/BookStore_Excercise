@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.quanlysach.view.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <LinearLayout
+        android:paddingHorizontal="18dp"
+        android:weightSum="1"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textSize="16sp"
+            android:layout_weight="0.5"
+            android:text="Tìm kiếm theo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <Spinner
+            android:id="@+id/spnSearch"
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <TextView
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="4dp"
+        android:text="Ấn giữ item để sửa, xóa"
+        android:textStyle="italic"
+        android:textColor="#F43535"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -24,4 +52,4 @@
         android:textColor="@color/msg_no_books"
         android:textSize="@dimen/msg_no_books" />
 
-</RelativeLayout>
+</LinearLayout>

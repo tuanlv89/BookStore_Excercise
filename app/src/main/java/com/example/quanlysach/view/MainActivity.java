@@ -7,7 +7,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +39,14 @@ public class MainActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private RecyclerView recyclerView;
     private TextView noBooksView;
+    private ImageView btnSearch;
+    private EditText edtSearch;
+    private String typeSearch = "";
+    private Spinner spinner;
     public int currentBookId = 0;
-
+    private int idUser;
     private BookDatabaseHelper db;
+    private String[] categoryBook = new String[]{"Tất cả", "Tên sách", "Loại sách"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +54,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        idUser = getIntent().getIntExtra("idUser", 0);
         coordinatorLayout = findViewById(R.id.coordinator_layout);
         recyclerView = findViewById(R.id.recycler_view);
         noBooksView = findViewById(R.id.empty_books_view);
+        spinner = findViewById(R.id.spnSearch);
+        btnSearch = findViewById(R.id.btnSearch);
+        edtSearch = findViewById(R.id.searchEditText);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, categoryBook);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinner.setAdapter(adapter);
 
         db = new BookDatabaseHelper(this);
 
-        booksList.addAll(db.getAllBooks());
+        booksList.addAll(db.getAllBooks(idUser));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,16 +98,50 @@ public class MainActivity extends AppCompatActivity {
                 showActionsDialog(position);
             }
         }));
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: typeSearch = "";
+                        break;
+                    case 1: typeSearch = Book.COLUMN_TITLE;
+                        break;
+                    case 2: typeSearch = Book.COLUMN_CATEGORY;
+                        break;
+                }
+                Toast.makeText(MainActivity.this, typeSearch, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(typeSearch.equals("")) {
+                    Toast.makeText(MainActivity.this, "All" + typeSearch, Toast.LENGTH_LONG).show();
+                    booksList.clear();
+                    booksList.addAll(db.getAllBooks(idUser));
+                } else {
+                    String search = edtSearch.getText().toString();
+                    booksList.clear();
+                    booksList.addAll(db.getAllBooksByCondition(idUser, typeSearch, search));
+                }
+                bookListAdapterAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void createBookEntry(String title, String author, String category) {
-        Book book = new Book(currentBookId, title, author, category);
-        Log.d("AAAA", book.toString());
+        Book book = new Book(currentBookId, idUser, title, author, category);
         int id = db.addBook(book);
 
         // get the newly inserted title from db
         Book newBook = db.getBook(id);
-        Log.d("AAA", newBook.toString());
         if (newBook != null) {
             // adding new title to array list at 0 position
             booksList.add(0, newBook);
